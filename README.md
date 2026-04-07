@@ -1,51 +1,52 @@
-Historical Trade Volume Analysis (Citi Trading Desk)
-This project provides a Java-based solution for processing and analyzing high-volume trade data. It focuses on implementing fundamental sorting algorithms to organize market data by volume, ensuring both stability for audit trails and efficiency for large datasets (up to 1 million daily trades).
+Portfolio Return & Risk Analysis (Investment Banking)
+This project implements high-performance sorting for asset management and portfolio optimization. Designed for datasets of 10,000+ assets, it uses hybrid and multi-criteria sorting to rank investments by performance and risk profiles.
 🚀 Key Features
-Stable Sorting: Implements Merge Sort to sort trades by volume (Ascending). Stability ensures that trades with identical volumes maintain their original relative order (e.g., by timestamp).
-In-Place Sorting: Implements Quick Sort for descending volume analysis. This approach minimizes memory overhead by sorting within the existing array structure.
-Session Merging: Logic to combine multiple trading sessions (e.g., Morning and Afternoon) into a unified report.
-Volume Analytics: Utility to calculate the total aggregate volume post-sorting for market trend reporting.
-🛠️ Algorithms Used
-Algorithm	Order	Time Complexity	Space Complexity	Best Use Case
-Merge Sort	Ascending
+Stable Performance Ranking: Uses Merge Sort to rank assets by returnRate (Ascending). Stability ensures that if two assets have the same return, their original relative positioning is preserved.
+Risk-Adjusted Quick Sort: A custom Quick Sort implementation that ranks assets by returnRate (Descending) as a primary key and volatility (Ascending) as a secondary key.
+Hybrid Optimization: Automatically switches to Insertion Sort for small sub-partitions (threshold < 10) to reduce recursion overhead and improve cache locality.
+Pivot Protection: Employs Median-of-Three pivot selection to guarantee
 
 
 
 
+performance even on partially sorted financial data.
+🛠️ Algorithms & Logic
+Technique	Goal	Complexity
+Merge Sort	Stability for ties
 
 
 
 
-Audit trails where stability is required.
-Quick Sort	Descending
+Hybrid Quick Sort	Memory efficiency
 
 
 
 
 avg
+Median-of-Three	Prevent
 
 
 
-High-speed, memory-constrained environments.
+worst-case	Algorithmic Safety
+Multi-Criteria	Return DESC + Volatility ASC	Custom Partition Logic
 💻 Usage Example
 java
-// Define Trade data
-Trade[] morning = {
-new Trade("trade3", 500),
-new Trade("trade1", 100),
-new Trade("trade2", 300)
+// Define Portfolio
+Asset[] portfolio = {
+new Asset("AAPL", 12.0, 1.5),
+new Asset("MSFT", 12.0, 1.1), // Same return, lower risk
+new Asset("TSLA", 8.0, 2.8)
 };
 
-// Perform Stable Merge Sort (Ascending)
-TradeVolumeAnalysis.mergeSort(morning);
-// Output: [trade1:100, trade2:300, trade3:500]
+// 1. Stable Merge Sort (Ascending Return)
+PortfolioOptimization.mergeSort(portfolio);
 
-// Perform Quick Sort (Descending)
-TradeVolumeAnalysis.quickSort(morning, 0, morning.length - 1);
-// Output: [trade3:500, trade2:300, trade1:100]
+// 2. Hybrid Quick Sort (Descending Return + Low Volatility First)
+PortfolioOptimization.quickSort(portfolio, 0, portfolio.length - 1);
+// Result: [MSFT: 12.0% (V:1.1), AAPL: 12.0% (V:1.5), TSLA: 8.0% (V:2.8)]
 Use code with caution.
 
 📊 Business Use Cases
-Market Trend Reports: Generating daily summaries for the Citi trading desk.
-Portfolio Rebalancing: Identifying high-volume assets for immediate action.
-HFT Analytics: Rapidly ordering execution data for algorithmic feedback loops.
+Asset Allocation Optimization: Ranking assets for "Efficient Frontier" modeling.
+Risk-Parity Construction: Prioritizing low-volatility assets within the same return bracket.
+Quant Research: Sorting 10,000+ tickers for daily investment recommendation reports.
