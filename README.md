@@ -1,26 +1,51 @@
-# Problem 2: Client Risk Score Ranking
+Historical Trade Volume Analysis (Citi Trading Desk)
+This project provides a Java-based solution for processing and analyzing high-volume trade data. It focuses on implementing fundamental sorting algorithms to organize market data by volume, ensuring both stability for audit trails and efficiency for large datasets (up to 1 million daily trades).
+🚀 Key Features
+Stable Sorting: Implements Merge Sort to sort trades by volume (Ascending). Stability ensures that trades with identical volumes maintain their original relative order (e.g., by timestamp).
+In-Place Sorting: Implements Quick Sort for descending volume analysis. This approach minimizes memory overhead by sorting within the existing array structure.
+Session Merging: Logic to combine multiple trading sessions (e.g., Morning and Afternoon) into a unified report.
+Volume Analytics: Utility to calculate the total aggregate volume post-sorting for market trend reporting.
+🛠️ Algorithms Used
+Algorithm	Order	Time Complexity	Space Complexity	Best Use Case
+Merge Sort	Ascending
 
-## 📌 Scenario
-The Risk Management team requires a rapid sorting mechanism for 500 client risk scores. High-risk clients must be identified immediately for prioritized review, while low-risk clients are sorted for standard compliance checks.
 
-## 🛠️ Implementation Strategy
 
-### 1. Low-to-High Risk (Bubble Sort)
-*   **Goal:** Ascending order for baseline risk reporting.
-*   **Visual Analysis:** Tracks every swap to demonstrate algorithm efficiency during team demos.
-*   **Space Complexity:** $O(1)$ — an in-place sort that requires no additional memory.
 
-### 2. Priority Ranking (Insertion Sort)
-*   **Goal:** Descending order (Highest Risk first).
-*   **Adaptive Logic:** Specifically chosen for its efficiency on nearly-sorted data, common in risk score updates.
-*   **Secondary Tie-breaker:** If two clients share the same risk score, the one with the higher **Account Balance** is ranked higher to mitigate larger financial exposure.
 
-## 🏗️ Core Concepts
-*   **Space Complexity $O(1)$:** Critical for memory-efficient processing of client lists on internal bank servers.
-*   **Stability:** Insertion sort maintains the relative order of equal risk scores, ensuring the account balance secondary sort is accurate.
 
-## 📊 Sample Output
-```text
-Bubble (asc): [A:20, B:50, C:80] // Swaps: 2
-Insertion (desc): [C:80, B:50, A:20]
-Top 3 risks: C(80), B(50), A(20)
+
+
+Audit trails where stability is required.
+Quick Sort	Descending
+
+
+
+
+avg
+
+
+
+High-speed, memory-constrained environments.
+💻 Usage Example
+java
+// Define Trade data
+Trade[] morning = {
+new Trade("trade3", 500),
+new Trade("trade1", 100),
+new Trade("trade2", 300)
+};
+
+// Perform Stable Merge Sort (Ascending)
+TradeVolumeAnalysis.mergeSort(morning);
+// Output: [trade1:100, trade2:300, trade3:500]
+
+// Perform Quick Sort (Descending)
+TradeVolumeAnalysis.quickSort(morning, 0, morning.length - 1);
+// Output: [trade3:500, trade2:300, trade1:100]
+Use code with caution.
+
+📊 Business Use Cases
+Market Trend Reports: Generating daily summaries for the Citi trading desk.
+Portfolio Rebalancing: Identifying high-volume assets for immediate action.
+HFT Analytics: Rapidly ordering execution data for algorithmic feedback loops.
