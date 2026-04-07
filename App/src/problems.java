@@ -1,83 +1,67 @@
 import java.util.Arrays;
 
-class Transaction {
-    String accountId;
-    String txId;
-
-    Transaction(String accountId, String txId) {
-        this.accountId = accountId;
-        this.txId = txId;
-    }
-
-    @Override
-    public String toString() { return accountId + "(" + txId + ")"; }
-}
-
 public class problems {
 
-    // --- LINEAR SEARCH (O(n)) ---
-    public static int linearSearchFirst(Transaction[] logs, String target) {
-        int comparisons = 0;
-        for (int i = 0; i < logs.length; i++) {
-            comparisons++;
-            if (logs[i].accountId.equals(target)) {
-                System.out.println("Linear Search Comparisons: " + comparisons);
-                return i;
-            }
+    // --- LINEAR SEARCH (Unsorted - O(n)) ---
+    public static int linearSearch(int[] riskBands, int threshold) {
+        for (int i = 0; i < riskBands.length; i++) {
+            if (riskBands[i] == threshold) return i;
         }
-        return -1;
+        return -1; // Not found
     }
 
-    // --- BINARY SEARCH (O(log n)) ---
-    // Finds the boundary index for duplicates
-    public static int binarySearchBoundary(Transaction[] logs, String target, boolean findFirst) {
-        int low = 0, high = logs.length - 1;
-        int result = -1;
-        int comparisons = 0;
+    // --- BINARY SEARCH: FLOOR (Largest value <= target) ---
+    public static int findFloor(int[] riskBands, int target) {
+        int low = 0, high = riskBands.length - 1;
+        int floor = -1;
 
         while (low <= high) {
-            comparisons++;
             int mid = low + (high - low) / 2;
-            int cmp = target.compareTo(logs[mid].accountId);
+            if (riskBands[mid] == target) return riskBands[mid];
 
-            if (cmp == 0) {
-                result = mid;
-                if (findFirst) high = mid - 1; // Keep looking left
-                else low = mid + 1;            // Keep looking right
-            } else if (cmp < 0) {
+            if (riskBands[mid] < target) {
+                floor = riskBands[mid]; // Potential candidate
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return floor;
+    }
+
+    // --- BINARY SEARCH: CEILING (Smallest value >= target) ---
+    public static int findCeiling(int[] riskBands, int target) {
+        int low = 0, high = riskBands.length - 1;
+        int ceiling = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (riskBands[mid] == target) return riskBands[mid];
+
+            if (riskBands[mid] > target) {
+                ceiling = riskBands[mid]; // Potential candidate
                 high = mid - 1;
             } else {
                 low = mid + 1;
             }
         }
-        System.out.println("Binary Search (" + (findFirst ? "First" : "Last") + ") Comparisons: " + comparisons);
-        return result;
+        return ceiling;
     }
 
     public static void main(String[] args) {
-        // Sample Data (Pre-sorted for Binary Search)
-        Transaction[] logs = {
-                new Transaction("accA", "TX1"),
-                new Transaction("accB", "TX2"),
-                new Transaction("accB", "TX3"),
-                new Transaction("accC", "TX4")
-        };
+        // Pre-sorted risk levels for a client profile
+        int[] riskBands = {10, 25, 50, 100};
+        int clientRisk = 30;
 
-        String target = "accB";
+        System.out.println("Market Risk Bands: " + Arrays.toString(riskBands));
+        System.out.println("New Client Risk Score: " + clientRisk);
 
-        // 1. Linear Search
-        int firstIdx = linearSearchFirst(logs, target);
-        System.out.println("Linear: First occurrence of " + target + " at index " + firstIdx);
+        // 1. Find Floor (Lower Bound Compliance)
+        int floor = findFloor(riskBands, clientRisk);
+        System.out.println("Risk Floor (Largest <= 30): " + (floor != -1 ? floor : "None"));
 
-        // 2. Binary Search + Occurrence Count
-        int start = binarySearchBoundary(logs, target, true);
-        int end = binarySearchBoundary(logs, target, false);
-
-        if (start != -1) {
-            int count = end - start + 1;
-            System.out.println("Binary: Found " + target + " at index " + start + ". Total count: " + count);
-        } else {
-            System.out.println("Account ID not found.");
-        }
+        // 2. Find Ceiling (Upper Bound Pricing)
+        int ceiling = findCeiling(riskBands, clientRisk);
+        System.out.println("Risk Ceiling (Smallest >= 30): " + (ceiling != -1 ? ceiling : "None"));
     }
 }
