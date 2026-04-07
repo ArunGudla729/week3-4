@@ -1,31 +1,26 @@
-# week3-4
-# Problem 1: Transaction Fee Sorting for Audit Compliance
+# Problem 2: Client Risk Score Ranking
 
 ## 📌 Scenario
-A banking application processes massive volumes of daily transactions. For compliance reviews, auditors require these transactions to be sorted by fee amount. This project implements a dual-sorting strategy based on batch size to ensure efficiency and stability.
+The Risk Management team requires a rapid sorting mechanism for 500 client risk scores. High-risk clients must be identified immediately for prioritized review, while low-risk clients are sorted for standard compliance checks.
 
-## 🛠️ Sorting Strategy
+## 🛠️ Implementation Strategy
 
-### 1. Bubble Sort (Small Batches ≤ 100)
-*   **Mechanism:** Uses adjacent swaps and a `swapped` flag for **early termination**.
-*   **Audit Benefit:** Simple to implement for quick daily small-batch reports.
-*   **Complexity:** $O(n^2)$ worst case, but $O(n)$ if the batch is already sorted.
+### 1. Low-to-High Risk (Bubble Sort)
+*   **Goal:** Ascending order for baseline risk reporting.
+*   **Visual Analysis:** Tracks every swap to demonstrate algorithm efficiency during team demos.
+*   **Space Complexity:** $O(1)$ — an in-place sort that requires no additional memory.
 
-### 2. Insertion Sort (Medium Batches 100–1,000)
-*   **Mechanism:** Builds a sorted subarray by shifting larger elements to the right.
-*   **Audit Benefit:** Maintains **Stability**. If two transactions have the same fee, their original relative order (timestamp) is preserved, which is critical for legal audit trails.
+### 2. Priority Ranking (Insertion Sort)
+*   **Goal:** Descending order (Highest Risk first).
+*   **Adaptive Logic:** Specifically chosen for its efficiency on nearly-sorted data, common in risk score updates.
+*   **Secondary Tie-breaker:** If two clients share the same risk score, the one with the higher **Account Balance** is ranked higher to mitigate larger financial exposure.
 
-### 3. Outlier Detection
-*   Automatically flags any transaction with a fee exceeding **$50.00** for secondary fraud review.
-
-## 🏗️ Compliance Concepts
-*   **Stability:** Essential for financial records where the original entry order must be respected during secondary sorts.
-*   **Time Complexity Analysis:**
-    *   **Bubble:** Best for nearly sorted small data.
-    *   **Insertion:** Highly efficient for small-to-medium datasets and outperforms Bubble Sort in most real-world scenarios.
+## 🏗️ Core Concepts
+*   **Space Complexity $O(1)$:** Critical for memory-efficient processing of client lists on internal bank servers.
+*   **Stability:** Insertion sort maintains the relative order of equal risk scores, ensuring the account balance secondary sort is accurate.
 
 ## 📊 Sample Output
 ```text
-BubbleSort Result: [id3:5.0@10:15, id1:10.5@10:00, id2:25.0@09:30] // 3 passes, 2 swaps
-InsertionSort (Fee+TS) Result: [id3:5.0@10:15, id1:10.5@10:00, id2:25.0@09:30]
-High-fee outliers: None
+Bubble (asc): [A:20, B:50, C:80] // Swaps: 2
+Insertion (desc): [C:80, B:50, A:20]
+Top 3 risks: C(80), B(50), A(20)
