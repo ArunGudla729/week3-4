@@ -1,52 +1,46 @@
-Portfolio Return & Risk Analysis (Investment Banking)
-This project implements high-performance sorting for asset management and portfolio optimization. Designed for datasets of 10,000+ assets, it uses hybrid and multi-criteria sorting to rank investments by performance and risk profiles.
+Transaction Log Lookup (Audit & Compliance)
+This module provides high-speed lookup tools for Citi transaction forensics. It allows investigators to scan millions of logs to identify specific Account IDs and quantify transaction frequency.
 🚀 Key Features
-Stable Performance Ranking: Uses Merge Sort to rank assets by returnRate (Ascending). Stability ensures that if two assets have the same return, their original relative positioning is preserved.
-Risk-Adjusted Quick Sort: A custom Quick Sort implementation that ranks assets by returnRate (Descending) as a primary key and volatility (Ascending) as a secondary key.
-Hybrid Optimization: Automatically switches to Insertion Sort for small sub-partitions (threshold < 10) to reduce recursion overhead and improve cache locality.
-Pivot Protection: Employs Median-of-Three pivot selection to guarantee
+Forensic Linear Search: Scans unsorted logs to find the first instance of a transaction. Best for real-time streams where sorting hasn't occurred.
+Logarithmic Binary Search: Utilizes a divide-and-conquer approach on sorted logs to find accounts in
+
+
+
+time.
+Duplicate Range Detection: Specialized logic to find the first and last occurrence of an ID, allowing for instant calculation of total transactions per account.
+Audit Metrics: Tracks comparison counts to evaluate search efficiency across large datasets (1M+ entries).
+📊 Complexity Analysis
+Method	Best Case	Worst Case	Requirement
+Linear Search
 
 
 
 
-performance even on partially sorted financial data.
-🛠️ Algorithms & Logic
-Technique	Goal	Complexity
-Merge Sort	Stability for ties
+
+
+
+None (Works on unsorted)
+Binary Search
 
 
 
 
-Hybrid Quick Sort	Memory efficiency
 
 
 
-
-avg
-Median-of-Three	Prevent
-
-
-
-worst-case	Algorithmic Safety
-Multi-Criteria	Return DESC + Volatility ASC	Custom Partition Logic
+Data must be Sorted
 💻 Usage Example
 java
-// Define Portfolio
-Asset[] portfolio = {
-new Asset("AAPL", 12.0, 1.5),
-new Asset("MSFT", 12.0, 1.1), // Same return, lower risk
-new Asset("TSLA", 8.0, 2.8)
-};
+// For 1 million logs:
+// Linear might take 1,000,000 comparisons.
+// Binary will take ~20 comparisons.
 
-// 1. Stable Merge Sort (Ascending Return)
-PortfolioOptimization.mergeSort(portfolio);
-
-// 2. Hybrid Quick Sort (Descending Return + Low Volatility First)
-PortfolioOptimization.quickSort(portfolio, 0, portfolio.length - 1);
-// Result: [MSFT: 12.0% (V:1.1), AAPL: 12.0% (V:1.5), TSLA: 8.0% (V:2.8)]
+int first = TransactionLookup.binarySearchBoundary(logs, "accB", true);
+int last = TransactionLookup.binarySearchBoundary(logs, "accB", false);
+int totalTransactions = last - first + 1;
 Use code with caution.
 
-📊 Business Use Cases
-Asset Allocation Optimization: Ranking assets for "Efficient Frontier" modeling.
-Risk-Parity Construction: Prioritizing low-volatility assets within the same return bracket.
-Quant Research: Sorting 10,000+ tickers for daily investment recommendation reports.
+⚖️ Business Use Cases
+Dispute Resolution: Quickly locating a specific transaction based on a customer's Account ID.
+Regulatory Reporting: Counting the frequency of transactions for "Anti-Money Laundering" (AML) flags.
+System Audits: Verifying transaction integrity during end-of-day processing.
